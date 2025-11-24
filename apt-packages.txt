@@ -1,0 +1,14 @@
+curl
+wget
+sudo
+unzip
+git
+vim
+tree
+jq
+python3
+python3-pip
+python3-tk
+python3-dev
+python-is-python3
+hostsed

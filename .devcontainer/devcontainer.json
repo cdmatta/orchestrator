@@ -1,0 +1,25 @@
+{
+    "name": "orchestrator",
+    "build": {
+        "dockerfile": "../Dockerfile",
+        "context": "..",
+        "target": "local"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "42Crunch.vscode-openapi",
+                "charliermarsh.ruff",
+                "formulahendry.code-runner",
+                "golang.go",
+                "ms-azuretools.vscode-containers",
+                "ms-python.debugpy",
+                "ms-python.python",
+                "oderwat.indent-rainbow",
+                "tamasfe.even-better-toml",
+                "task.vscode-task",
+                "yzhang.markdown-all-in-one"
+            ]
+        }
+    }
+}
