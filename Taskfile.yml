@@ -1,0 +1,71 @@
+version: '3'
+
+vars:
+  frontend_src: 'controlserver/app/frontend'
+
+tasks:
+  default:
+    desc: Prepare development enviornment
+    cmds:
+      - task: clean
+      - task: dependencies
+      - task: build-frontend
+
+  clean:
+    desc: Remove all downloaded/generated files
+    aliases: [c]
+    cmds:
+      - rm -rf {{.frontend_src}}/dist
+      - rm -rf {{.frontend_src}}/node_modules
+
+  dependencies:
+    desc: Install dependencies for the entire project
+    cmds:
+      - |
+        pushd controlserver
+          go mod tidy
+        popd
+      - |
+        pushd {{.frontend_src}}
+          npm install
+        popd
+
+  frontend-dev:
+    desc: Launch the frontend in dev mode
+    aliases: [f]
+    cmds:
+      - |
+        pushd {{.frontend_src}}
+          npm run dev
+        popd
+
+  build-frontend:
+    desc: Build the frontend project
+    aliases: [bf]
+    cmds:
+      - |
+        pushd {{.frontend_src}}
+          npm run build
+        popd
+
+  build:
+    desc: Build the entire project
+    aliases: [b]
+    cmds:
+      - task: dependencies
+      - task: build-frontend
+      - |
+        pushd controlserver
+          go build -o controlserver main.go
+        popd
+
+  monitor:
+    desc: Term based monitoring of the app
+    silent: true
+    cmds:
+      - |
+        if ! command -v expvarmon &> /dev/null &> /dev/null; then
+          echo "expvarmon not found. Installing..."
+          go install github.com/divan/expvarmon@latest
+        fi
+        expvarmon -ports="8888" -endpoint="/api/debug/vars"

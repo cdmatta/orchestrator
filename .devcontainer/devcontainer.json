@@ -5,7 +5,9 @@
         "context": "..",
         "target": "local"
     },
+    "postStartCommand": ".devcontainer/post-start.sh",
     "forwardPorts": [
+        5173,
         8888
     ],
     "customizations": {
