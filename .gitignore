@@ -2,3 +2,6 @@
 
 # Log files
 *.log
+
+# Go debug files
+**/__debug_*

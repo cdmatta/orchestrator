@@ -5,6 +5,9 @@
         "context": "..",
         "target": "local"
     },
+    "forwardPorts": [
+        8888
+    ],
     "customizations": {
         "vscode": {
             "extensions": [

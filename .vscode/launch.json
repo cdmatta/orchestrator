@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "name": "controlserver",
+            "type": "go",
+            "request": "launch",
+            "program": "${workspaceFolder}/controlserver/main.go",
+            "args": [
+                "-logLevel=trace"
+            ]
+        }
+    ]
+}
