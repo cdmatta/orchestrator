@@ -2,6 +2,8 @@ import { toast } from 'sonner';
 import { create } from 'zustand';
 import { LOGS_TAIL_PATH, LOGS_TRUNCATE_PATH } from '../ui/urls';
 
+const MAX_LOGS = 10000; // Prevent unbounded memory growth
+
 interface LogState {
     logs: string[];
     isConnected: boolean;
@@ -23,9 +25,14 @@ export const useLogs = create<LogState & LogActions>((set) => {
 
         isConnected: false,
 
-        addLog: (log: string) => set((state) => ({
-            logs: [...state.logs, log]
-        })),
+        addLog: (log: string) => set((state) => {
+            const newLogs = [...state.logs, log];
+            // Keep only the most recent MAX_LOGS entries
+            if (newLogs.length > MAX_LOGS) {
+                return { logs: newLogs.slice(-MAX_LOGS) };
+            }
+            return { logs: newLogs };
+        }),
 
         clearLogs: () => set({ logs: [] }),
 
@@ -50,9 +57,14 @@ export const useLogs = create<LogState & LogActions>((set) => {
             set((state) => ({ ...state, isConnected: true }));
 
             eventSource.addEventListener('log', (event) => {
-                set((state) => ({
-                    logs: [...state.logs, (event as MessageEvent).data]
-                }))
+                set((state) => {
+                    const newLogs = [...state.logs, (event as MessageEvent).data];
+                    // Keep only the most recent MAX_LOGS entries
+                    if (newLogs.length > MAX_LOGS) {
+                        return { logs: newLogs.slice(-MAX_LOGS) };
+                    }
+                    return { logs: newLogs };
+                });
             });
             eventSource.addEventListener('error', () => {
                 set((state) => ({
